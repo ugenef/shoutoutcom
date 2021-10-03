@@ -7,9 +7,9 @@ import Link from '@material-ui/core/Link';
 import {Link as RouterLink} from 'react-router-dom';
 import {Theme, withStyles} from '@material-ui/core/styles';
 import {Styles} from "@material-ui/core/styles/withStyles";
-import {resolve} from "inversify-react";
 import {IUserContext, UserContextFactory} from "../user/UserContext";
 import {User} from "../user/User";
+import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login";
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
     toolbar: {
@@ -89,6 +89,20 @@ interface IState {
 class Header extends React.Component<IProps, IState> {
     private readonly userContext: IUserContext = UserContextFactory.get();
 
+    constructor(props: IProps) {
+        super(props);
+        this.handleLogin = this.handleLogin.bind(this);
+        this.handleFailure = this.handleFailure.bind(this);
+    }
+
+    handleLogin(response: (GoogleLoginResponse | GoogleLoginResponseOffline)){
+        console.log(response);
+    }
+
+    handleFailure(err: any){
+        console.log(err);
+    }
+
     render() {
         const {classes, sections, title} = this.props;
         return (
@@ -117,14 +131,13 @@ class Header extends React.Component<IProps, IState> {
                             </Link>
                         ))}
                     </Grid>
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        startIcon={<GitHubIcon/>}
-                        className={classes.signUpButton}
-                        onClick={() => this.userContext?.setUser(new User())}>
-                        Sign up with Google
-                    </Button>
+                    <GoogleLogin
+                        clientId=""
+                        buttonText="Log in with Google"
+                        onSuccess={this.handleLogin}
+                        onFailure={this.handleFailure}
+                        cookiePolicy={'single_host_origin'}
+                    />
                 </Grid>
                 {/*<Divider className={classes.divider}/>*/}
             </React.Fragment>

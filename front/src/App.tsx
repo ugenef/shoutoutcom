@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Blog from "./blog/Blog";
 import {
@@ -13,13 +12,7 @@ import Container from "@material-ui/core/Container";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import PromotersList from "./promo-list/PromotersList";
-import BlogPost from "./blog/BlogPost";
-import post1 from "./blog/blog-post.1.md";
-import {Divider} from "@material-ui/core";
 import About from "./about/About";
-import AddAccountForm from "./profile/AddAccountForm";
-import EditAccountForm from "./profile/EditAccountForm";
-import MyAccountsList from "./profile/MyAccountsList";
 import Profile from "./profile/Profile";
 
 const sections = [
