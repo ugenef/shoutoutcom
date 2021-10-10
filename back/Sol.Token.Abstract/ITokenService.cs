@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Sol.HttpApi.Token.Abstract
+namespace Sol.Token.Abstract
 {
     public interface ITokenService
     {

@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Sol.Auth.Abstract;
-using Sol.HttpApi.Token.Abstract;
-using Sol.HttpApi.Token.Impl.Config;
+using Sol.Token.Abstract;
+using Sol.Token.Impl.Config;
 using Sol.Users.Abstract;
 
-namespace Sol.HttpApi.Token.Impl.Service
+namespace Sol.Token.Impl.Service
 {
     internal class TokenService : ITokenService
     {

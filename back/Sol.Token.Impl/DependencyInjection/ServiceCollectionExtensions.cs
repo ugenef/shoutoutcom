@@ -1,25 +1,30 @@
-﻿using System.Text;
-using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Sol.Auth.Impl.DependencyInjection;
-using Sol.HttpApi.Token.Abstract;
-using Sol.HttpApi.Token.Impl.Config;
-using Sol.HttpApi.Token.Impl.Service;
+using Sol.Token.Abstract;
+using Sol.Token.Impl.Config;
+using Sol.Token.Impl.Service;
 using Sol.Users.Impl.DependencyInjection;
 
-namespace Sol.HttpApi.Token.Impl.DependencyInjection
+namespace Sol.Token.Impl.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddToken(this IServiceCollection services, ConfigurationManager config)
+        public static IServiceCollection AddSolToken(
+            this IServiceCollection services,
+            Action<AddTokenOptions> configure)
         {
+            var options = new AddTokenOptions();
+            configure(options);
+
             var jwtConfig = new JwtConfig
             {
-                ValidIssuer = config["Jwt:ValidIssuer"],
-                ValidAudience = config["Jwt:ValidAudience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"])),
+                ValidIssuer = options.ValidIssuer,
+                ValidAudience = options.ValidAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key)),
             };
             services.TryAddSingleton<IJwtConfig>(jwtConfig);
             services.TryAddSingleton<ITokenService, TokenService>();

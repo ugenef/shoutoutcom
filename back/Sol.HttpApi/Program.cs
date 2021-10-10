@@ -2,11 +2,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sol.HttpApi.ServiceCollectionExtensions;
-using Sol.HttpApi.Token.Impl.DependencyInjection;
+using Sol.Token.Impl.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
-builder.Services.AddToken(config);
+builder.Services.AddSolToken(o =>
+{
+    o.ValidIssuer = config["Jwt:ValidIssuer"];
+    o.ValidAudience = config["Jwt:ValidAudience"];
+    o.Key = config["Jwt:Key"];
+});
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new() { Title = "Sol.HttpApi", Version = "v1" }); });
 

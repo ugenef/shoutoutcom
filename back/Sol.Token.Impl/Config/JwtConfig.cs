@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace Sol.HttpApi.Token.Impl.Config
+namespace Sol.Token.Impl.Config
 {
     internal class JwtConfig : IJwtConfig
     {

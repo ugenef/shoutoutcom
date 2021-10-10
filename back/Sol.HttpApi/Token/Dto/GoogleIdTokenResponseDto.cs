@@ -1,4 +1,4 @@
-﻿namespace Sol.HttpApi.Token.Impl.Dto
+﻿namespace Sol.HttpApi.Token.Dto
 {
     public class GoogleIdTokenResponseDto
     {

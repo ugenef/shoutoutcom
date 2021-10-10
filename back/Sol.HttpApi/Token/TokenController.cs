@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Sol.HttpApi.Token.Abstract;
-using Sol.HttpApi.Token.Impl.Dto;
+using Sol.HttpApi.Token.Dto;
+using Sol.Token.Abstract;
 
-namespace Sol.HttpApi.Token.Impl
+namespace Sol.HttpApi.Token
 {
     [ApiController]
     [Route("token")]
@@ -21,7 +21,7 @@ namespace Sol.HttpApi.Token.Impl
             _tokenService = tokenService;
         }
 
-        [HttpPost, Route("google")]
+        [HttpGet, Route("google")]
         public async Task<GoogleIdTokenResponseDto> GetTokenWithGoogleIdAsync([FromBody] GoogleIdTokenRequestDto request)
         {
             var jwt = await _tokenService.GetJwtWithGoogleIdAsync(request.IdToken);
