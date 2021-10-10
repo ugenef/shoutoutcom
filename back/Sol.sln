@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.Token.Abstract", "Sol.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.Token.Impl", "Sol.Token.Impl\Sol.Token.Impl.csproj", "{E541DBAC-20E0-4404-AAF1-DFB43242670E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.IdGen.Abstract", "Sol.IdGen.Abstract\Sol.IdGen.Abstract.csproj", "{66EE9A6E-2325-4079-AD3D-97C24BB2E37F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.IdGenerator.Guid", "Sol.IdGenerator.Guid\Sol.IdGenerator.Guid.csproj", "{78C0FED1-1A86-4776-914D-7DB2D9250E2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +58,13 @@ Global
 		{E541DBAC-20E0-4404-AAF1-DFB43242670E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E541DBAC-20E0-4404-AAF1-DFB43242670E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E541DBAC-20E0-4404-AAF1-DFB43242670E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66EE9A6E-2325-4079-AD3D-97C24BB2E37F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66EE9A6E-2325-4079-AD3D-97C24BB2E37F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66EE9A6E-2325-4079-AD3D-97C24BB2E37F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66EE9A6E-2325-4079-AD3D-97C24BB2E37F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -15,6 +15,8 @@ namespace Sol.Token.Impl.DependencyInjection
     {
         public static IServiceCollection AddSolToken(
             this IServiceCollection services,
+            string connectionString,
+            string database,
             Action<AddTokenOptions> configure)
         {
             var options = new AddTokenOptions();
@@ -30,7 +32,7 @@ namespace Sol.Token.Impl.DependencyInjection
             services.TryAddSingleton<ITokenService, TokenService>();
 
             services.AddSolAuth();
-            services.AddSolUsers();
+            services.AddSolUsers(connectionString, database);
             return services;
         }
     }

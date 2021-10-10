@@ -1,35 +1,60 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Mapster;
+using Sol.DataLayer.Mongo;
+using Sol.IdGen.Abstract;
 using Sol.Users.Abstract;
 using Sol.Users.Abstract.Model;
+using Sol.Users.Impl.Dal.Model;
 
 namespace Sol.Users.Impl
 {
     internal class UserStorage : IUserStorage
     {
-        private readonly ConcurrentDictionary<string, User> _str = new();
+        private readonly IMongoRepo<UserDao> _db;
+        private readonly IIdGenerator _idGenerator;
 
-
-        public Task<User> CreateAsync(string email)
+        public UserStorage(IMongoRepo<UserDao> db, IIdGenerator idGenerator)
         {
-            var user = new User
+            _db = db;
+            _idGenerator = idGenerator;
+        }
+
+        public async Task<User> CreateAsync(CreateUserParam param)
+        {
+            var user = new UserDao
             {
-                Email = email,
-                ExtId = Guid.NewGuid().ToString("N")
+                ExtUserId = _idGenerator.GetId(),
+                Email = param.Email,
+                GivenName = param.GivenName,
+                FamilyName = param.FamilyName,
+                Locale = param.Locale,
+                ImageUrl = param.ImageUrl,
+                CreateDate = DateTime.Now
             };
-            _str[user.ExtId] = user;
-            return Task.FromResult(user);
+            await _db.CreateAsync(user).ConfigureAwait(false);
+            return user.Adapt<User>();
         }
 
-        public Task<User> GetAsync(string extId)
+        public Task<User?> FindByIdAsync(string extId)
         {
-            return Task.FromResult(_str[extId]);
+            return FindAsync(u => u.ExtUserId == extId);
         }
 
-        public Task<User?> FindAsync(string email)
+        public Task<User?> FindByEmailAsync(string email)
         {
-            return Task.FromResult<User>(null);
+            return FindAsync(u => u.Email == email);
+        }
+
+        private async Task<User?> FindAsync(Expression<Func<UserDao, bool>> filter)
+        {
+            var daos = await _db
+                .FindAllAsync(filter)
+                .ConfigureAwait(false);
+            var dao = daos.SingleOrDefault();
+            return dao?.Adapt<User>();
         }
     }
 }

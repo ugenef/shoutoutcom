@@ -7,14 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Sol.DataLayer.Mongo\Sol.DataLayer.Mongo.csproj" />
       <ProjectReference Include="..\Sol.IdGen.Abstract\Sol.IdGen.Abstract.csproj" />
-      <ProjectReference Include="..\Sol.IdGenerator.Guid\Sol.IdGenerator.Guid.csproj" />
-      <ProjectReference Include="..\Sol.Users.Abstract\Sol.Users.Abstract.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Mapster" Version="7.2.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     </ItemGroup>
 

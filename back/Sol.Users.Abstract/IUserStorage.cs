@@ -5,8 +5,8 @@ namespace Sol.Users.Abstract
 {
     public interface IUserStorage
     {
-        Task<User> CreateAsync(string email);
-        Task<User> GetAsync(string extId);
-        Task<User?> FindAsync(string email);
+        Task<User> CreateAsync(CreateUserParam param);
+        Task<User?> FindByIdAsync(string extId);
+        Task<User?> FindByEmailAsync(string email);
     }
 }

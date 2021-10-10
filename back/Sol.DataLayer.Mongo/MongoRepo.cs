@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
@@ -48,6 +50,12 @@ namespace Sol.DataLayer.Mongo
 
         private static string GetCollectionName()
         {
+            var tableAttribute = typeof(T).GetCustomAttribute<TableAttribute>();
+            if (tableAttribute != null)
+            {
+                return tableAttribute.Name;
+            }
+
             var typeName = typeof(T).Name;
             if (typeName.Length == 0)
                 throw new ArgumentException();

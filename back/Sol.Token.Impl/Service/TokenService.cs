@@ -5,6 +5,7 @@ using Sol.Auth.Abstract;
 using Sol.Token.Abstract;
 using Sol.Token.Impl.Config;
 using Sol.Users.Abstract;
+using Sol.Users.Abstract.Model;
 
 namespace Sol.Token.Impl.Service
 {
@@ -29,11 +30,18 @@ namespace Sol.Token.Impl.Service
 
         public async Task<string> GetJwtWithGoogleIdAsync(string googleIdToken)
         {
-            var googleAuthResult = await _googleAuth.AuthAsync(googleIdToken).ConfigureAwait(false);
-            var user = await _userStorage.FindAsync(googleAuthResult.Email).ConfigureAwait(false) ?? 
-                       await _userStorage.CreateAsync(googleAuthResult.Email).ConfigureAwait(false);
+            var res = await _googleAuth.AuthAsync(googleIdToken).ConfigureAwait(false);
+            var user = await _userStorage.FindByEmailAsync(res.Email).ConfigureAwait(false) ?? 
+                       await _userStorage.CreateAsync(new CreateUserParam
+                       {
+                           Email = res.Email,
+                           GivenName = res.GivenName,
+                           FamilyName = res.FamilyName,
+                           Locale = res.Locale,
+                           ImageUrl = res.ImageUrl
+                       }).ConfigureAwait(false);
 
-            return _jwtFactory.Get(user.ExtId, TimeSpan.FromDays(1), new TokenValidationParameters
+            return _jwtFactory.Get(user.ExtUserId, TimeSpan.FromDays(180), new TokenValidationParameters
             {
                 ValidIssuer = _jwtConfig.ValidIssuer,
                 ValidAudience = _jwtConfig.ValidAudience,

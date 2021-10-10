@@ -6,7 +6,10 @@ using Sol.Token.Impl.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
-builder.Services.AddSolToken(o =>
+var connectionString = config["Mongo:ConnectionString"];
+var database = config["Mongo:Database"];
+
+builder.Services.AddSolToken(connectionString, database,o =>
 {
     o.ValidIssuer = config["Jwt:ValidIssuer"];
     o.ValidAudience = config["Jwt:ValidAudience"];

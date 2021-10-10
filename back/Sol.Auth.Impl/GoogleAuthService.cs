@@ -15,10 +15,14 @@ namespace Sol.Auth.Impl
         {
             var res = await GoogleJsonWebSignature.ValidateAsync(googleIdToken).ConfigureAwait(false);
             _ = res ?? throw new AuthenticationException("Invalid Google Id Token");
-            Console.WriteLine($"{res}");
+
             return new GoogleAuthResult
             {
-                Email = res.Email
+                Email = res.Email,
+                GivenName = res.GivenName,
+                FamilyName = res.FamilyName,
+                Locale = res.Locale,
+                ImageUrl = res.Picture
             };
         }
     }

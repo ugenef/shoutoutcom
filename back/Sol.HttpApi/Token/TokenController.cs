@@ -21,7 +21,7 @@ namespace Sol.HttpApi.Token
             _tokenService = tokenService;
         }
 
-        [HttpGet, Route("google")]
+        [HttpPost, Route("google")]
         public async Task<GoogleIdTokenResponseDto> GetTokenWithGoogleIdAsync([FromBody] GoogleIdTokenRequestDto request)
         {
             var jwt = await _tokenService.GetJwtWithGoogleIdAsync(request.IdToken);

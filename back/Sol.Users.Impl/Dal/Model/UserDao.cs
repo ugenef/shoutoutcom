@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sol.Users.Abstract.Model
+namespace Sol.Users.Impl.Dal.Model
 {
-    public class User
+    [Table("users")]
+    internal class UserDao
     {
         public string ExtUserId { get; init; }
         public string Email { get; init; }

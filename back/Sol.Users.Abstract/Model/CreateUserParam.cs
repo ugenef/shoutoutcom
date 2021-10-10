@@ -1,6 +1,6 @@
-﻿namespace Sol.Auth.Abstract.Model
+﻿namespace Sol.Users.Abstract.Model
 {
-    public class GoogleAuthResult
+    public class CreateUserParam
     {
         public string Email { get; init; }
         public string GivenName { get; init; }

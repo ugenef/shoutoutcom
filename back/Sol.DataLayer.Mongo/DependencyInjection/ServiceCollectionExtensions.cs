@@ -20,5 +20,12 @@ namespace Sol.DataLayer.Mongo.DependencyInjection
             services.TryAddSingleton<IMongoDbFactory, MongoDbFactory>();
             return services;
         }
+
+        public static IServiceCollection AddSolMongoRepo<T>(
+            this IServiceCollection services)
+        {
+            services.TryAddSingleton<IMongoRepo<T>, MongoRepo<T>>();
+            return services;
+        }
     }
 }
