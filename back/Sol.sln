@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.IdGen.Abstract", "Sol.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.IdGenerator.Guid", "Sol.IdGenerator.Guid\Sol.IdGenerator.Guid.csproj", "{78C0FED1-1A86-4776-914D-7DB2D9250E2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.Accounts.Abstract", "Sol.Accounts.Abstract\Sol.Accounts.Abstract.csproj", "{484A7AAF-063A-467E-AAA5-B318DD4CE903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sol.Accounts.Impl", "Sol.Accounts.Impl\Sol.Accounts.Impl.csproj", "{7F0549B7-23DF-4A01-9D49-4C0071D78594}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +70,13 @@ Global
 		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78C0FED1-1A86-4776-914D-7DB2D9250E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484A7AAF-063A-467E-AAA5-B318DD4CE903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484A7AAF-063A-467E-AAA5-B318DD4CE903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484A7AAF-063A-467E-AAA5-B318DD4CE903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484A7AAF-063A-467E-AAA5-B318DD4CE903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F0549B7-23DF-4A01-9D49-4C0071D78594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F0549B7-23DF-4A01-9D49-4C0071D78594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F0549B7-23DF-4A01-9D49-4C0071D78594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F0549B7-23DF-4A01-9D49-4C0071D78594}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
