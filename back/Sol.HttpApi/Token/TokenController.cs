@@ -7,7 +7,7 @@ using Sol.Token.Abstract;
 namespace Sol.HttpApi.Token
 {
     [ApiController]
-    [Route("token")]
+    [Route($"{ApiConstants.ApiV1}/token")]
     public class TokenController
     {
         private readonly ITokenService _tokenService;

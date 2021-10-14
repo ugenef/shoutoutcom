@@ -16,7 +16,7 @@ namespace Sol.DataLayer.Mongo
     {
         Task CreateAsync(T entity);
         Task<T[]> FindAllAsync(Expression<Func<T, bool>> filter);
-        Task UpdateManyAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update);
+        Task UpdateOneAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update);
         Task RemoveManyAsync(Expression<Func<T, bool>> filter);
     }
 }

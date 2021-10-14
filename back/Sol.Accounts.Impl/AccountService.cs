@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Mapster;
+using MongoDB.Driver;
 using Sol.Accounts.Abstract;
 using Sol.Accounts.Abstract.Model;
 using Sol.Accounts.Impl.Dal;
@@ -20,29 +23,55 @@ namespace Sol.Accounts.Impl
             _idGenerator = idGenerator;
         }
 
-        public Task<Account> CreateAsync(CreateAccountParam param)
+        public async Task<Account> CreateAsync(CreateAccountParam param)
         {
-            throw new System.NotImplementedException();
+            var dao = new AccountDao
+            {
+                ExtAccountId = _idGenerator.GetId(),
+                ExtUserId = param.ExtUserId,
+                Name = param.Name,
+                Description = param.Description,
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                DeleteDate = null,
+                Stat = new AccountDao.Statistics { ClicksCount = 0 }
+            };
+            await _db.CreateAsync(dao).ConfigureAwait(false);
+            return dao.Adapt<Account>();
         }
 
-        public Task<Account[]> FindByUserAsync(string extUserId)
+        public async Task<Account[]> FindByUserAsync(string extUserId)
         {
-            throw new System.NotImplementedException();
+            var daos = await _db
+                .FindAllAsync(a => a.ExtUserId == extUserId && a.DeleteDate == null)
+                .ConfigureAwait(false);
+            return daos.Adapt<Account[]>();
         }
 
         public Task UpdateDescriptionAsync(string extAccId, string newDescription)
         {
-            throw new System.NotImplementedException();
+            var builder = Builders<AccountDao>
+                .Update
+                .Set(a => a.Description, newDescription);
+            return _db
+                .UpdateOneAsync(a => a.ExtAccountId == extAccId, builder);
         }
 
         public Task IncrementClicksAsync(string extAccId)
         {
-            throw new System.NotImplementedException();
+            var builder = Builders<AccountDao>
+                .Update
+                .Inc(a => a.Stat.ClicksCount, 1);
+            return _db
+                .UpdateOneAsync(a => a.ExtAccountId == extAccId, builder);
         }
 
         public Task DeleteAsync(string extAccId)
         {
-            throw new System.NotImplementedException();
+            var builder = Builders<AccountDao>
+                .Update
+                .Set(a => a.DeleteDate, DateTime.Now);
+            return _db.UpdateOneAsync(a => a.ExtAccountId == extAccId, builder);
         }
     }
 }

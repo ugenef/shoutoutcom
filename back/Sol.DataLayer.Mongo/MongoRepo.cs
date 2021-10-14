@@ -31,9 +31,9 @@ namespace Sol.DataLayer.Mongo
             return list.ToArray();
         }
 
-        public Task UpdateManyAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
+        public Task UpdateOneAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
         {
-            return GetCollection().UpdateManyAsync(filter, update);
+            return GetCollection().UpdateOneAsync(filter, update);
         }
 
         public Task RemoveManyAsync(Expression<Func<T, bool>> filter)

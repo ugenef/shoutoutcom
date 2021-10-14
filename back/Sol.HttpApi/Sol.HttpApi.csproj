@@ -12,6 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Sol.Accounts.Abstract\Sol.Accounts.Abstract.csproj" />
+      <ProjectReference Include="..\Sol.Accounts.Impl\Sol.Accounts.Impl.csproj" />
       <ProjectReference Include="..\Sol.Auth.Abstract\Sol.Auth.Abstract.csproj" />
       <ProjectReference Include="..\Sol.Auth.Impl\Sol.Auth.Impl.csproj" />
       <ProjectReference Include="..\Sol.Token.Abstract\Sol.Token.Abstract.csproj" />
