@@ -2,11 +2,12 @@ import {User} from "./User";
 
 export interface IUserContext {
     setUser(user: User): void;
-
+    getUser(): User | undefined
     onUserChanged(handler: { (user: User): void }): void;
 }
 
 export class UserContext implements IUserContext {
+    private user: User | undefined;
     private readonly handlers: { (user: User): void }[];
 
     constructor() {
@@ -14,6 +15,7 @@ export class UserContext implements IUserContext {
     }
 
     public setUser(user: User): void {
+        this.user = user;
         for (let i = 0; i < this.handlers.length; i++) {
             try {
                 this.handlers[i](user);
@@ -21,6 +23,10 @@ export class UserContext implements IUserContext {
                 console.error("Error calling setUser handler", err);
             }
         }
+    }
+
+    getUser(): User | undefined{
+        return this.user;
     }
 
     public onUserChanged(handler: { (user: User): void }): void {

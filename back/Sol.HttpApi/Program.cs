@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Sol.Accounts.Impl.DependencyInjection;
 using Sol.HttpApi.ServiceCollectionExtensions;
 using Sol.Token.Impl.DependencyInjection;
 
@@ -15,10 +18,12 @@ builder.Services.AddSolToken(connectionString, database,o =>
     o.ValidAudience = config["Jwt:ValidAudience"];
     o.Key = config["Jwt:Key"];
 });
+builder.Services.AddSolAccounts(connectionString, database);
+builder.Services.AddSolCors(builder.Environment.EnvironmentName);
+builder.Services.AddSolJwtAuthentication(config);
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new() { Title = "Sol.HttpApi", Version = "v1" }); });
-
-builder.Services.AddJwtAuthentication(config);
 
 #region Middleware
 var app = builder.Build();
@@ -30,6 +35,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(builder.Environment.EnvironmentName);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

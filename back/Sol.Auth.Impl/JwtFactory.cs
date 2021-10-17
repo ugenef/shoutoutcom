@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Sol.Auth.Abstract;
+using Sol.Auth.Abstract.Model;
 
 namespace Sol.Auth.Impl
 {
@@ -18,7 +19,7 @@ namespace Sol.Auth.Impl
 
         public string Get(string sub, TimeSpan expiry, TokenValidationParameters tokenParams)
         {
-            var claims = new Claim[] { new("sub", sub) };
+            var claims = new Claim[] { new(ClaimConstants.Sub, sub) };
 
             var token = new JwtSecurityToken(
                 tokenParams.ValidIssuer,

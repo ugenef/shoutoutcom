@@ -6,6 +6,15 @@ COPY package-lock.json ./
 RUN npm ci
 RUN npm install react-scripts@4.0.3 -g
 COPY . ./
+
+#This is the least complicated way to inject
+#env variables to a react app, yet it is not
+#the safest one. One day it has to be fixed.
+ARG REACT_APP_BACK_BASE_URL
+ENV REACT_APP_BACK_BASE_URL $REACT_APP_BACK_BASE_URL
+ARG REACT_APP_GOOGLE_CLIENT_ID
+ENV REACT_APP_GOOGLE_CLIENT_ID $REACT_APP_GOOGLE_CLIENT_ID
+
 RUN npm run build
 CMD ["npm", "start"]
 

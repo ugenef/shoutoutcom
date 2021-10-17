@@ -10,6 +10,8 @@ import {Styles} from "@material-ui/core/styles/withStyles";
 import {IUserContext, UserContextFactory} from "../user/UserContext";
 import {User} from "../user/User";
 import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login";
+import {HeaderConfig, IHeaderConfig} from "./HeaderConfig";
+import {BackendClientFactory, IBackendClient} from "../infra/back-api/BackendClient";
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
     toolbar: {
@@ -87,6 +89,8 @@ interface IState {
 }
 
 class Header extends React.Component<IProps, IState> {
+    private readonly config: IHeaderConfig = new HeaderConfig();
+    private readonly back: IBackendClient = BackendClientFactory.get();
     private readonly userContext: IUserContext = UserContextFactory.get();
 
     constructor(props: IProps) {
@@ -96,10 +100,23 @@ class Header extends React.Component<IProps, IState> {
     }
 
     handleLogin(response: (GoogleLoginResponse | GoogleLoginResponseOffline)){
+        if('tokenId' in response){
+            this.generateJwt(response);
+        }
         console.log(response);
     }
 
+    generateJwt(response: GoogleLoginResponse){
+        this.back.get_jwt(response.tokenId)
+            .then(jwt => {
+                this.back.setJwt(jwt);
+                this.userContext.setUser(new User(jwt));
+            })
+            .catch(err => console.error(err));
+    }
+
     handleFailure(err: any){
+        console.log(this.config.client_id);
         console.log(err);
     }
 
@@ -132,7 +149,7 @@ class Header extends React.Component<IProps, IState> {
                         ))}
                     </Grid>
                     <GoogleLogin
-                        clientId=""
+                        clientId={this.config.client_id}
                         buttonText="Log in with Google"
                         onSuccess={this.handleLogin}
                         onFailure={this.handleFailure}

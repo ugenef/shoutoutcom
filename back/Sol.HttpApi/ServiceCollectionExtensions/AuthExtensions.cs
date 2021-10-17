@@ -9,7 +9,7 @@ namespace Sol.HttpApi.ServiceCollectionExtensions
 {
     internal static class AuthExtensions
     {
-        public static IServiceCollection AddJwtAuthentication(
+        public static IServiceCollection AddSolJwtAuthentication(
             this IServiceCollection services, 
             ConfigurationManager config)
         {

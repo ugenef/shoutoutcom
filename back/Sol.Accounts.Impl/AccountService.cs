@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using MongoDB.Driver;
@@ -52,7 +53,8 @@ namespace Sol.Accounts.Impl
         {
             var builder = Builders<AccountDao>
                 .Update
-                .Set(a => a.Description, newDescription);
+                .Set(a => a.Description, newDescription)
+                .Set(a => a.UpdateDate, DateTime.Now);
             return _db
                 .UpdateOneAsync(a => a.ExtAccountId == extAccId, builder);
         }
@@ -68,10 +70,20 @@ namespace Sol.Accounts.Impl
 
         public Task DeleteAsync(string extAccId)
         {
+            var now = DateTime.Now;
             var builder = Builders<AccountDao>
                 .Update
-                .Set(a => a.DeleteDate, DateTime.Now);
+                .Set(a => a.DeleteDate, now)
+                .Set(a => a.UpdateDate, now);
             return _db.UpdateOneAsync(a => a.ExtAccountId == extAccId, builder);
+        }
+
+        public async Task<bool> IsOwnerAsync(string extAccId, string extUserId)
+        {
+            var account = await _db
+                .GetAsync(a => a.ExtAccountId == extAccId)
+                .ConfigureAwait(false);
+            return account.ExtUserId == extUserId;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,6 +30,15 @@ namespace Sol.DataLayer.Mongo
                 .ToListAsync();
 
             return list.ToArray();
+        }
+
+        public async Task<T> GetAsync(Expression<Func<T, bool>> filter)
+        {
+            var list = await GetCollection()
+                .Find(filter)
+                .ToListAsync();
+
+            return list.Single();
         }
 
         public Task UpdateOneAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)

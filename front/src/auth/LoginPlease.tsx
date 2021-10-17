@@ -50,7 +50,7 @@ class LoginPlease extends React.Component<IProps, IState> {
                         size="small"
                         startIcon={<GitHubIcon/>}
                         className={classes.button}
-                        onClick={() => this.userContext?.setUser(new User())}>
+                        onClick={() => this.userContext?.setUser(new User(""))}>
                         Sign up with Google
                     </Button>
                 </div>

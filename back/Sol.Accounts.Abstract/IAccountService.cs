@@ -10,5 +10,6 @@ namespace Sol.Accounts.Abstract
         Task UpdateDescriptionAsync(string extAccId, string newDescription);
         Task IncrementClicksAsync(string extAccId);
         Task DeleteAsync(string extAccId);
+        Task<bool> IsOwnerAsync(string extAccId, string extUserId);
     }
 }
