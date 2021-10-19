@@ -66,7 +66,7 @@ class Profile extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {pageState: PageState.AccountsList};
+        this.state = {pageState: PageState.AccountsList, user: this.userContext.getUser()};
         this.userContext?.onUserChanged(u => this.setState({user: u}));
     }
 
@@ -77,13 +77,13 @@ class Profile extends React.Component<IProps, IState> {
                 {this.state.user ?
                 <div>
                     <Route exact path="/profile">
-                        <MyAccountsList/>
+                        <MyAccountsList user={this.state.user}/>
                     </Route>
                     <Route exact path="/profile/accounts/add">
-                        <AddAccountForm />;
+                        <AddAccountForm user={this.state.user}/>;
                     </Route>
                     <Route exact path="/profile/accounts/edit">
-                        <EditAccountForm />;
+                        <EditAccountForm user={this.state.user}/>;
                     </Route>
                 </div> :
                 <LoginPlease/>}

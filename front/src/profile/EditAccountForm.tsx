@@ -6,6 +6,7 @@ import {Button, Typography} from "@material-ui/core";
 import AccountEditor from "./AccountEditor";
 import Account from "./Account";
 import {Redirect} from "react-router-dom";
+import {User} from "../user/User";
 
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
@@ -21,6 +22,7 @@ const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
 
 interface IProps {
     classes?: any;
+    user: User;
 }
 
 interface IState {

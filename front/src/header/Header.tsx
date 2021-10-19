@@ -102,12 +102,13 @@ class Header extends React.Component<IProps, IState> {
     handleLogin(response: (GoogleLoginResponse | GoogleLoginResponseOffline)){
         if('tokenId' in response){
             this.generateJwt(response);
+        }else{
+            console.error(response);
         }
-        console.log(response);
     }
 
     generateJwt(response: GoogleLoginResponse){
-        this.back.get_jwt(response.tokenId)
+        this.back.getJwt(response.tokenId)
             .then(jwt => {
                 this.back.setJwt(jwt);
                 this.userContext.setUser(new User(jwt));
@@ -116,8 +117,7 @@ class Header extends React.Component<IProps, IState> {
     }
 
     handleFailure(err: any){
-        console.log(this.config.client_id);
-        console.log(err);
+        console.error(err);
     }
 
     render() {

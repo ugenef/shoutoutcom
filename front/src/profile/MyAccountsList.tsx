@@ -6,6 +6,8 @@ import {List, ListItem, Typography, ListItemIcon, ListItemText, ListItemSecondar
 import Button from '@material-ui/core/Button';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Account from "./Account";
+import {User} from "../user/User";
+import {BackendClientFactory, IBackendClient} from "../infra/back-api/BackendClient";
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
     mainGrid: {
@@ -44,26 +46,25 @@ const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
 
 interface IProps {
     classes?: any;
+    user: User;
 }
 
 interface IState {
+    accounts: Account[];
 }
 
-const promoters = [
-    {name: '@super-promo', link: 'https://instagram.com', description: 'Im a super ultra big promoter'},
-    {name: '@ultra_promo', link: '#', description: 'Best promo on wild west'},
-    {name: '@megapromo', link: '#', description: 'The one who write very very long self description'},
-    {name: '@fashion-promo2000', link: '#', description: 'I will promote your fashion man'},
-    {name: '@another.promo', link: '#', description: 'I will promote your fashion man'},
-]
-
 class MyAccountsList extends React.Component<IProps, IState> {
-    generate(promoters: any[], element: any) {
-        return promoters.map((value) =>
-            React.cloneElement(element, {
-                key: value.name,
-            }),
-        );
+    private readonly back: IBackendClient = BackendClientFactory.get();
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {accounts: []};
+        this.back.getMyAccounts()
+            .then(accs => {
+                const models = accs.map(a => new Account(a.name, a.link, a.description));
+                this.setState({accounts: models});
+            })
+            .catch(reason => console.error(reason));
     }
 
     render() {
@@ -85,7 +86,7 @@ class MyAccountsList extends React.Component<IProps, IState> {
                     Add account
                 </Button>
                 {
-                    promoters.map((p) => (
+                    this.state.accounts.map((p) => (
                         <div className={classes.rowGrid}>
                             <ListItem key={p.name}>
                                 <ListItemText

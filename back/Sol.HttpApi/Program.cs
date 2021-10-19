@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using Sol.Accounts.Impl.DependencyInjection;
 using Sol.HttpApi.ServiceCollectionExtensions;
 using Sol.Token.Impl.DependencyInjection;
