@@ -2,7 +2,7 @@
 {
     public class UpdateAccountDto
     {
-        public string ExtAccId { get; init; }
+        public string ExtAccountId { get; init; }
         public string NewDescription { get; init; }
     }
 }

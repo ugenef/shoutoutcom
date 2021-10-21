@@ -7,6 +7,10 @@ import AccountEditor from "./AccountEditor";
 import Account from "./Account";
 import {Redirect} from "react-router-dom";
 import {User} from "../user/User";
+import {CreateAccountRequest} from "../infra/back-api/model/CreateAccountRequest";
+import {BackendClientFactory, IBackendClient} from "../infra/back-api/BackendClient";
+import {UpdateAccountRequest} from "../infra/back-api/model/UpdateAccountRequest";
+import {IProfileContext, ProfileContextFactory} from "./ProfileContext";
 
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
@@ -30,6 +34,9 @@ interface IState {
 }
 
 class EditAccountForm extends React.Component<IProps, IState> {
+    private readonly back: IBackendClient = BackendClientFactory.get();
+    private readonly profileContext: IProfileContext = ProfileContextFactory.get();
+
     constructor(props: IProps) {
         super(props);
         this.state = {submitted: false}
@@ -37,13 +44,15 @@ class EditAccountForm extends React.Component<IProps, IState> {
     }
 
     submitForm(accountName: string, description: string) {
-        console.log(accountName);
-        console.log(description);
-        this.setState({submitted: true});
+        const request = new UpdateAccountRequest(accountName, description);
+        this.back.updateAccount(request)
+            .then(res => this.setState({submitted: true}))
+            .catch(err => console.error(err));
     }
 
     render() {
         const {classes} = this.props;
+        const account = this.profileContext.getAccountToEdit();
         return (
             <React.Fragment>
                 {this.state.submitted ? <Redirect to={"/profile"}/> :
@@ -52,8 +61,8 @@ class EditAccountForm extends React.Component<IProps, IState> {
                             <AccountEditor
                                 titleText="Edit your account"
                                 buttonText="Save changes"
-                                predefinedAccount='@yo_best_promo'
-                                predefinedDescription='will promote your business yo!'
+                                predefinedAccount={account?.name}
+                                predefinedDescription={account?.description}
                                 onSuccessfulInput={this.submitForm}
                             >
                             </AccountEditor>

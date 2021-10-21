@@ -8,6 +8,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Account from "./Account";
 import {User} from "../user/User";
 import {BackendClientFactory, IBackendClient} from "../infra/back-api/BackendClient";
+import {IProfileContext, ProfileContextFactory} from "./ProfileContext";
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
     mainGrid: {
@@ -55,6 +56,7 @@ interface IState {
 
 class MyAccountsList extends React.Component<IProps, IState> {
     private readonly back: IBackendClient = BackendClientFactory.get();
+    private readonly profileContext: IProfileContext = ProfileContextFactory.get();
 
     constructor(props: IProps) {
         super(props);
@@ -95,8 +97,10 @@ class MyAccountsList extends React.Component<IProps, IState> {
                                 />
                             </ListItem>
                             <div className={classes.buttons}>
-                                <Button component="a" href='/profile/accounts/edit' className={classes.editButton}
+                                <Button component="a" href='/profile/accounts/edit'
+                                        className={classes.editButton}
                                         variant="outlined"
+                                        onClick={()=>this.profileContext.setAccountToEdit(p)}
                                 >
                                     Edit
                                 </Button>

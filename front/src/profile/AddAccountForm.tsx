@@ -7,6 +7,8 @@ import AccountEditor from "./AccountEditor";
 import Account from "./Account";
 import {Redirect} from "react-router-dom";
 import {User} from "../user/User";
+import {BackendClientFactory, IBackendClient} from "../infra/back-api/BackendClient";
+import {CreateAccountRequest} from "../infra/back-api/model/CreateAccountRequest";
 
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
@@ -30,6 +32,8 @@ interface IState {
 }
 
 class AddAccountForm extends React.Component<IProps, IState> {
+    private readonly back: IBackendClient = BackendClientFactory.get();
+
     constructor(props: IProps) {
         super(props);
         this.state = {submitted: false}
@@ -37,9 +41,10 @@ class AddAccountForm extends React.Component<IProps, IState> {
     }
 
     submitForm(accountName: string, description: string) {
-        console.log(accountName);
-        console.log(description);
-        this.setState({submitted: true});
+        const request = new CreateAccountRequest(accountName, description);
+        this.back.createAccount(request)
+            .then(res => this.setState({submitted: true}))
+            .catch(err => console.error(err));
     }
 
     render() {

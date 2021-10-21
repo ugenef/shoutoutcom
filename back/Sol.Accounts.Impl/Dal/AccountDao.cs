@@ -8,6 +8,7 @@ namespace Sol.Accounts.Impl.Dal
     {
         public string ExtAccountId { get; set; }
         public string ExtUserId { get; set; }
+        public string Link { get; set; }
         public string Name { get; init; }
         public string Description { get; init; }
         public DateTime CreateDate { get; init; }

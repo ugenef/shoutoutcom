@@ -54,10 +54,10 @@ namespace Sol.HttpApi.Accounts
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateAccountDto dto)
         {
             var extUserId = GetExtUserId();
-            var isOwner = await _service.IsOwnerAsync(dto.ExtAccId, extUserId).ConfigureAwait(false);
+            var isOwner = await _service.IsOwnerAsync(dto.ExtAccountId, extUserId).ConfigureAwait(false);
             if (isOwner)
             {
-                await _service.UpdateDescriptionAsync(dto.ExtAccId, dto.NewDescription).ConfigureAwait(false);
+                await _service.UpdateDescriptionAsync(dto.ExtAccountId, dto.NewDescription).ConfigureAwait(false);
                 return new OkResult();
             }
 

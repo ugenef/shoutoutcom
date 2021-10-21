@@ -31,6 +31,7 @@ namespace Sol.Accounts.Impl
                 ExtAccountId = _idGenerator.GetId(),
                 ExtUserId = param.ExtUserId,
                 Name = param.Name,
+                Link = $"https://www.instagram.com/{param.Name.TrimStart('@')}/",
                 Description = param.Description,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
