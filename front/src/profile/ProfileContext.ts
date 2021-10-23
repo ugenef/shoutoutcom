@@ -1,5 +1,6 @@
 import Account from "./Account";
-import {IUserContext, UserContext} from "../user/UserContext";
+
+const accountStorageKey: string = '01ed2c35e94475d6fa1392ad446c8812';
 
 export interface IProfileContext {
     setAccountToEdit(account: Account): void;
@@ -10,18 +11,21 @@ export interface IProfileContext {
 }
 
 export class ProfileContext implements IProfileContext {
-    private accountToEdit: Account | undefined;
-
     setAccountToEdit(account: Account): void {
-        this.accountToEdit = account;
+        sessionStorage.setItem(accountStorageKey, JSON.stringify(account));
     }
 
     getAccountToEdit(): Account | undefined {
-        return this.accountToEdit;
+        const retrievedObject = sessionStorage.getItem(accountStorageKey);
+        if(retrievedObject){
+            return JSON.parse(retrievedObject) as Account;
+        }
+
+        return undefined;
     }
 
     clearAccountToEdit(): void {
-        this.accountToEdit = undefined;
+        sessionStorage.removeItem(accountStorageKey);
     }
 }
 

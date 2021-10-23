@@ -110,7 +110,6 @@ class Header extends React.Component<IProps, IState> {
     generateJwt(response: GoogleLoginResponse){
         this.back.getJwt(response.tokenId)
             .then(jwt => {
-                this.back.setJwt(jwt);
                 this.userContext.setUser(new User(jwt));
             })
             .catch(err => console.error(err));

@@ -43,16 +43,21 @@ class EditAccountForm extends React.Component<IProps, IState> {
         this.submitForm = this.submitForm.bind(this);
     }
 
-    submitForm(accountName: string, description: string) {
-        const request = new UpdateAccountRequest(accountName, description);
-        this.back.updateAccount(request)
+    submitForm(accountName: string, description: string, extAccountId: string) {
+        const request = new UpdateAccountRequest(extAccountId, description);
+        this.back.updateAccount(request, this.props.user.jwt)
             .then(res => this.setState({submitted: true}))
             .catch(err => console.error(err));
     }
 
     render() {
         const {classes} = this.props;
-        const account = this.profileContext.getAccountToEdit();
+        const storedAccount = this.profileContext.getAccountToEdit();
+        if(!storedAccount){
+            console.error("No account to edit stored")
+        }
+        const account = storedAccount as Account;
+
         return (
             <React.Fragment>
                 {this.state.submitted ? <Redirect to={"/profile"}/> :
@@ -63,7 +68,7 @@ class EditAccountForm extends React.Component<IProps, IState> {
                                 buttonText="Save changes"
                                 predefinedAccount={account?.name}
                                 predefinedDescription={account?.description}
-                                onSuccessfulInput={this.submitForm}
+                                onSuccessfulInput={(name, desc) => this.submitForm(name, desc, account.extAccountId)}
                             >
                             </AccountEditor>
                         </Grid>

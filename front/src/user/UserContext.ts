@@ -1,4 +1,5 @@
 import {User} from "./User";
+const userStorageKey: string = 'd601ed2c3ad446c88125e94475fa1392';
 
 export interface IUserContext {
     setUser(user: User): void;
@@ -15,7 +16,7 @@ export class UserContext implements IUserContext {
     }
 
     public setUser(user: User): void {
-        this.user = user;
+        localStorage.setItem(userStorageKey, JSON.stringify(user));
         for (let i = 0; i < this.handlers.length; i++) {
             try {
                 this.handlers[i](user);
@@ -26,7 +27,12 @@ export class UserContext implements IUserContext {
     }
 
     getUser(): User | undefined{
-        return this.user;
+        const retrievedObject = localStorage.getItem(userStorageKey);
+        if(retrievedObject){
+            return JSON.parse(retrievedObject) as User;
+        }
+
+        return undefined;
     }
 
     public onUserChanged(handler: { (user: User): void }): void {

@@ -7,92 +7,74 @@ import {UpdateAccountRequest} from "./model/UpdateAccountRequest";
 
 export interface IBackendClient {
     getJwt(googleToken: string): Promise<string>;
-    getMyAccounts(): Promise<AccountResponse[]>;
-    createAccount(request: CreateAccountRequest): Promise<void>;
-    updateAccount(request: UpdateAccountRequest): Promise<void>;
-    setJwt(jwt: string): void;
+    getMyAccounts(jwt: string): Promise<AccountResponse[]>;
+    createAccount(request: CreateAccountRequest, jwt: string): Promise<void>;
+    updateAccount(request: UpdateAccountRequest, jwt: string): Promise<void>;
 }
 
 export class BackendClient implements IBackendClient {
-    private jwt: string | undefined;
     private readonly config: IBackendClientConfig = new BackendClientConfig();
 
     async getJwt(googleToken: string): Promise<string> {
         const request = new JwtRequest(googleToken);
-        const response = await this.post<JwtRequest, JwtResponse>(this.config.token_url, request);
+        const response = await this.postJson<JwtRequest, JwtResponse>(this.config.token_url, request);
         return response.jwt;
     }
 
-    async createAccount(request: CreateAccountRequest): Promise<void> {
-        await this.postWithJwt<CreateAccountRequest>(this.config.create_account_url, request);
+    async createAccount(request: CreateAccountRequest, jwt: string): Promise<void> {
+        await this.postNoParseResponse<CreateAccountRequest>(this.config.create_account_url, request, jwt);
     }
 
-    async updateAccount(request: UpdateAccountRequest): Promise<void> {
-        await this.postWithJwt<UpdateAccountRequest>(this.config.update_account_url, request);
+    async updateAccount(request: UpdateAccountRequest, jwt: string): Promise<void> {
+        await this.postNoParseResponse<UpdateAccountRequest>(this.config.update_account_url, request, jwt);
     }
 
-    async getMyAccounts(): Promise<AccountResponse[]>{
-       const response = await this.getWithJwt<any, AccountResponse[]>(this.config.my_accounts_url);
-       return response;
+    async getMyAccounts(jwt: string): Promise<AccountResponse[]>{
+        const response = await this.get<AccountResponse[]>(this.config.my_accounts_url, jwt);
+        return response;
     }
 
-    setJwt(jwt: string): void{
-        this.jwt = jwt;
+    private async getJson<TRequest, TResponse>(url: string, request: TRequest, jwt?: string) : Promise<TResponse> {
+        const response = await this.makeRequest(url, 'GET', jwt, request);
+        return await response.json();
     }
 
-    getWithJwt<TRequest, TResponse>(url: string, request?: TRequest): Promise<TResponse> {
+    private async get<TResponse>(url: string, jwt: string) : Promise<TResponse> {
+        const response = await this.makeRequest(url, 'GET', jwt);
+        return await response.json();
+    }
+
+    private async postJson<TRequest, TResponse>(url: string,request: TRequest, jwt?: string) : Promise<TResponse> {
+        const response = await this.makeRequest(url, 'POST', jwt, request);
+        return await response.json();
+    }
+
+    private async postNoParseResponse<TRequest>(url: string,  request: TRequest, jwt?: string) : Promise<void> {
+        await this.makeRequest(url, 'POST', jwt, request);
+    }
+
+    private makeRequest(url: string, method: string, jwt?: string, request?: any) : Promise<Response>{
+        const headers: { [name: string] : string; } = {};
+        if(request){
+            headers['Content-Type'] = 'application/json';
+        }
+        if(jwt){
+            headers['Authorization'] = `Bearer ${jwt}`;
+        }
+
         return fetch(url,
             {
-                method: "GET",
+                method: method,
                 mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.jwt}`
-                },
+                headers: headers,
                 body: request ? JSON.stringify(request) : undefined
             })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(response.statusText)
                 }
-                return response.json() as Promise<TResponse>;
-            })
-    }
 
-    postWithJwt<TRequest>(url: string, request?: TRequest): Promise<void> {
-        return fetch(url,
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.jwt}`
-                },
-                body: JSON.stringify(request)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.statusText)
-                }
-                return;
-            })
-    }
-
-    post<TRequest, TResponse>(url: string, request: TRequest): Promise<TResponse> {
-        return fetch(url,
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(request)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.statusText)
-                }
-                return response.json() as Promise<TResponse>;
+                return response;
             })
     }
 }

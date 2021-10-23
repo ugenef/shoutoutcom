@@ -50,28 +50,23 @@ interface IProps {
 }
 
 interface IState {
-    pageState: PageState;
     accountToEdit?: Account;
     user?: User;
 }
 
-enum PageState{
-    AccountsList = 1,
-    AddAccountForm = 2,
-    EditAccountForm = 3,
-}
 
 class Profile extends React.Component<IProps, IState> {
     private readonly userContext: IUserContext = UserContextFactory.get();
 
     constructor(props: IProps) {
         super(props);
-        this.state = {pageState: PageState.AccountsList, user: this.userContext.getUser()};
+        this.state = { user: this.userContext.getUser()};
         this.userContext?.onUserChanged(u => this.setState({user: u}));
     }
 
     render() {
         const {classes} = this.props;
+        console.log("render called")
         return (
             <React.Fragment>
                 {this.state.user ?

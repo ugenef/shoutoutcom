@@ -61,9 +61,9 @@ class MyAccountsList extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {accounts: []};
-        this.back.getMyAccounts()
+        this.back.getMyAccounts(this.props.user.jwt)
             .then(accs => {
-                const models = accs.map(a => new Account(a.name, a.link, a.description));
+                const models = accs.map(a => new Account(a.name, a.link, a.description, a.extAccountId));
                 this.setState({accounts: models});
             })
             .catch(reason => console.error(reason));

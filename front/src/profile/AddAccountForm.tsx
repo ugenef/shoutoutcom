@@ -42,7 +42,7 @@ class AddAccountForm extends React.Component<IProps, IState> {
 
     submitForm(accountName: string, description: string) {
         const request = new CreateAccountRequest(accountName, description);
-        this.back.createAccount(request)
+        this.back.createAccount(request, this.props.user.jwt)
             .then(res => this.setState({submitted: true}))
             .catch(err => console.error(err));
     }
