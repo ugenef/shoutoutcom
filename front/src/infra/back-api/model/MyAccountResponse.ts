@@ -1,4 +1,4 @@
-export class AccountResponse {
+export class MyAccountResponse {
     public extAccountId: string;
     public name: string;
     public link: string;

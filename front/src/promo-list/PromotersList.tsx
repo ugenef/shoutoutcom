@@ -6,6 +6,9 @@ import {List, ListItem, Typography, ListItemIcon, ListItemText} from "@material-
 import InstagramIcon from '@material-ui/icons/Instagram';
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Button from "@material-ui/core/Button";
+import {BackendClientFactory, IBackendClient} from "../infra/back-api/BackendClient";
+import {IProfileContext, ProfileContextFactory} from "../profile/ProfileContext";
+import Account from "../profile/Account";
 
 
 const useStyles: Styles<Theme, {}, string> = (theme: Theme) => ({
@@ -35,23 +38,27 @@ interface IProps {
 }
 
 interface IState {
+    accounts: Account[];
 }
 
-const promoters = [
-    {name: '@super-promo', link: 'https://instagram.com', description: 'Im a super ultra big promoter'},
-    {name: '@ultra_promo', link: '#', description: 'Best promo on wild west'},
-    {name: '@megapromo', link: '#', description: 'The one who write very very long self description'},
-    {name: '@fashion-promo2000', link: '#', description: 'I will promote your fashion man'},
-    {name: '@another.promo', link: '#', description: 'I will promote your fashion man'},
-]
-
 class PromotersList extends React.Component<IProps, IState> {
-    generate(promoters: any[], element: any) {
-        return promoters.map((value) =>
-            React.cloneElement(element, {
-                key: value.name,
-            }),
-        );
+    private readonly back: IBackendClient = BackendClientFactory.get();
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {accounts: []};
+        this.back.getAccounts(0, 128)
+            .then(accs => {
+                const models = accs.map(a => new Account(a.name, a.link, a.description, a.extAccountId));
+                this.setState({accounts: models});
+            })
+            .catch(reason => console.error(reason));
+        this.saveClick = this.saveClick.bind(this);
+    }
+
+    private saveClick(extAccId: string){
+        this.back.incClicks(extAccId)
+            .catch(err => console.log(err))
     }
 
     render() {
@@ -77,8 +84,13 @@ class PromotersList extends React.Component<IProps, IState> {
                         </Button>
                         <List dense={false}>
                             {
-                                promoters.map((p) =>
-                                    <ListItem component='a' key={p.name} button href={p.link}>
+                                this.state.accounts.map((p) =>
+                                    <ListItem
+                                        component='a'
+                                        key={p.name}
+                                        button
+                                        href={p.link}
+                                        onClick={()=>this.saveClick(p.extAccountId)}>
                                         <ListItemIcon>
                                             <InstagramIcon fontSize='large'/>
                                         </ListItemIcon>

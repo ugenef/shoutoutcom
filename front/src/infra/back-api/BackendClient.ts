@@ -1,15 +1,20 @@
 import {BackendClientConfig, IBackendClientConfig} from "./BanckendClientConfig";
 import {JwtRequest} from "./model/JwtRequest";
 import {JwtResponse} from "./model/JwtResponse";
-import {AccountResponse} from "./model/AccountResponse";
+import {MyAccountResponse} from "./model/MyAccountResponse";
 import {CreateAccountRequest} from "./model/CreateAccountRequest";
 import {UpdateAccountRequest} from "./model/UpdateAccountRequest";
+import {AccountResponse} from "./model/AccountResponse";
+import {AccountFilterRequest} from "./model/AccountFilterRequest";
 
 export interface IBackendClient {
     getJwt(googleToken: string): Promise<string>;
-    getMyAccounts(jwt: string): Promise<AccountResponse[]>;
+    getAccounts(skip: number, take: number): Promise<AccountResponse[]>;
+    incClicks(extAccountId: string): Promise<void>;
+    getMyAccounts(jwt: string): Promise<MyAccountResponse[]>;
     createAccount(request: CreateAccountRequest, jwt: string): Promise<void>;
     updateAccount(request: UpdateAccountRequest, jwt: string): Promise<void>;
+    deleteAccount(extAccountId: string, jwt: string): Promise<void>;
 }
 
 export class BackendClient implements IBackendClient {
@@ -17,24 +22,36 @@ export class BackendClient implements IBackendClient {
 
     async getJwt(googleToken: string): Promise<string> {
         const request = new JwtRequest(googleToken);
-        const response = await this.postJson<JwtRequest, JwtResponse>(this.config.token_url, request);
+        const response = await this.postWithJson<JwtRequest, JwtResponse>(this.config.tokenUrl, request);
         return response.jwt;
     }
 
     async createAccount(request: CreateAccountRequest, jwt: string): Promise<void> {
-        await this.postNoParseResponse<CreateAccountRequest>(this.config.create_account_url, request, jwt);
+        await this.postNoParseResponse<CreateAccountRequest>(this.config.createAccountUrl, request, jwt);
     }
 
     async updateAccount(request: UpdateAccountRequest, jwt: string): Promise<void> {
-        await this.postNoParseResponse<UpdateAccountRequest>(this.config.update_account_url, request, jwt);
+        await this.postNoParseResponse<UpdateAccountRequest>(this.config.updateAccountUrl, request, jwt);
     }
 
-    async getMyAccounts(jwt: string): Promise<AccountResponse[]>{
-        const response = await this.get<AccountResponse[]>(this.config.my_accounts_url, jwt);
-        return response;
+    async getAccounts(skip: number, take: number): Promise<AccountResponse[]>{
+        const filter = new AccountFilterRequest(skip, take);
+        return await this.postWithJson<AccountFilterRequest, AccountResponse[]>(this.config.accountsUrl, filter);
     }
 
-    private async getJson<TRequest, TResponse>(url: string, request: TRequest, jwt?: string) : Promise<TResponse> {
+    async getMyAccounts(jwt: string): Promise<MyAccountResponse[]>{
+        return await this.get<MyAccountResponse[]>(this.config.myAccountsUrl, jwt);
+    }
+
+    async deleteAccount(extAccountId: string, jwt:string): Promise<void>{
+        await this.delete(this.config.deleteAccountUrl + extAccountId, jwt);
+    }
+
+    async incClicks(extAccountId: string): Promise<void>{
+        await this.patch(this.config.incClicksUrl(extAccountId));
+    }
+
+    private async getWithJson<TRequest, TResponse>(url: string, request: TRequest, jwt?: string) : Promise<TResponse> {
         const response = await this.makeRequest(url, 'GET', jwt, request);
         return await response.json();
     }
@@ -44,7 +61,15 @@ export class BackendClient implements IBackendClient {
         return await response.json();
     }
 
-    private async postJson<TRequest, TResponse>(url: string,request: TRequest, jwt?: string) : Promise<TResponse> {
+    private async patch(url: string) : Promise<void> {
+        await this.makeRequest(url, 'PATCH');
+    }
+
+    private async delete(url: string, jwt: string) : Promise<void> {
+        await this.makeRequest(url, 'DELETE', jwt);
+    }
+
+    private async postWithJson<TRequest, TResponse>(url: string, request: TRequest, jwt?: string) : Promise<TResponse> {
         const response = await this.makeRequest(url, 'POST', jwt, request);
         return await response.json();
     }

@@ -16,6 +16,7 @@ namespace Sol.Accounts.Impl.DependencyInjection
             services.AddSolMongo(connectionString, database);
             services.AddSolMongoRepo<AccountDao>();
             services.TryAddSingleton<IAccountService, AccountService>();
+            services.TryAddSingleton<IAccountCache, AccountCache>();
             return services;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -16,15 +15,18 @@ namespace Sol.HttpApi.Accounts
     [Route($"{ApiConstants.ApiV1}/accounts/my")]
     public class MyAccountsController : Controller
     {
+        private readonly IAccountCache _cache;
         private readonly IAccountService _service;
         private readonly ILogger<MyAccountsController> _logger;
 
         public MyAccountsController(
             IAccountService service, 
-            ILogger<MyAccountsController> logger)
+            ILogger<MyAccountsController> logger, 
+            IAccountCache cache)
         {
             _service = service;
             _logger = logger;
+            _cache = cache;
         }
 
         [HttpPost, Route("create")]
@@ -38,16 +40,17 @@ namespace Sol.HttpApi.Accounts
             };
 
             await _service.CreateAsync(param).ConfigureAwait(false);
+            _cache.Invalidate();
             return new OkResult();
         }
         
         [HttpGet, Route("find-all")]
-        [ProducesResponseType(typeof(AccountDto[]), 200)]
+        [ProducesResponseType(typeof(MyAccountDto[]), 200)]
         public async Task<IActionResult> FindMyAsync()
         {
             var extUserId = GetExtUserId();
             var accounts = await _service.FindByUserAsync(extUserId).ConfigureAwait(false);
-            return new OkObjectResult(accounts.Adapt<AccountDto[]>());
+            return new OkObjectResult(accounts.Adapt<MyAccountDto[]>());
         }
         
         [HttpPost, Route("update")]
@@ -58,6 +61,22 @@ namespace Sol.HttpApi.Accounts
             if (isOwner)
             {
                 await _service.UpdateDescriptionAsync(dto.ExtAccountId, dto.NewDescription).ConfigureAwait(false);
+                _cache.Invalidate();
+                return new OkResult();
+            }
+
+            return new StatusCodeResult(403);
+        }
+
+        [HttpDelete, Route("{extAccountId}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] string extAccountId)
+        {
+            var extUserId = GetExtUserId();
+            var isOwner = await _service.IsOwnerAsync(extAccountId, extUserId).ConfigureAwait(false);
+            if (isOwner)
+            {
+                await _service.DeleteAsync(extAccountId).ConfigureAwait(false);
+                _cache.Invalidate();
                 return new OkResult();
             }
 

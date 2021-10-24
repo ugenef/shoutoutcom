@@ -13,10 +13,16 @@ namespace Sol.Accounts.Abstract.Model
         public DateTime UpdateDate { get; init; }
         public DateTime? DeleteDate { get; init; }
         public Statistics Stat { get; init; }
+        public Scoring Score { get; init; }
 
         public class Statistics
         {
             public long ClicksCount { get; init; }
+        }
+
+        public class Scoring
+        {
+            public int? ManualRating { get; init; }
         }
     }
 }

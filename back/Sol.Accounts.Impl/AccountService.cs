@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using MongoDB.Driver;
@@ -36,7 +35,8 @@ namespace Sol.Accounts.Impl
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
                 DeleteDate = null,
-                Stat = new AccountDao.Statistics { ClicksCount = 0 }
+                Stat = new AccountDao.Statistics { ClicksCount = 0 },
+                Score = new AccountDao.Scoring(),
             };
             await _db.CreateAsync(dao).ConfigureAwait(false);
             return dao.Adapt<Account>();
@@ -46,6 +46,14 @@ namespace Sol.Accounts.Impl
         {
             var daos = await _db
                 .FindAllAsync(a => a.ExtUserId == extUserId && a.DeleteDate == null)
+                .ConfigureAwait(false);
+            return daos.Adapt<Account[]>();
+        }
+
+        public async Task<Account[]> FindAllActiveAsync()
+        {
+            var daos = await _db
+                .FindAllAsync(a => a.DeleteDate == null)
                 .ConfigureAwait(false);
             return daos.Adapt<Account[]>();
         }

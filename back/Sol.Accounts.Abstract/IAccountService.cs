@@ -11,5 +11,6 @@ namespace Sol.Accounts.Abstract
         Task IncrementClicksAsync(string extAccId);
         Task DeleteAsync(string extAccId);
         Task<bool> IsOwnerAsync(string extAccId, string extUserId);
+        Task<Account[]> FindAllActiveAsync();
     }
 }

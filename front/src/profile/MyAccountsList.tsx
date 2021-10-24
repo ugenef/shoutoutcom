@@ -67,6 +67,13 @@ class MyAccountsList extends React.Component<IProps, IState> {
                 this.setState({accounts: models});
             })
             .catch(reason => console.error(reason));
+        this.deleteAccount = this.deleteAccount.bind(this);
+    }
+
+    private deleteAccount(extAccId: string){
+        this.back.deleteAccount(extAccId, this.props.user.jwt)
+            .then(res => window.location.reload())
+            .catch(err => console.log(err))
     }
 
     render() {
@@ -88,23 +95,27 @@ class MyAccountsList extends React.Component<IProps, IState> {
                     Add account
                 </Button>
                 {
-                    this.state.accounts.map((p) => (
+                    this.state.accounts.map((acc) => (
                         <div className={classes.rowGrid}>
-                            <ListItem key={p.name}>
+                            <ListItem key={acc.name}>
                                 <ListItemText
-                                    primary={p.name}
-                                    secondary={p.description}
+                                    primary={acc.name}
+                                    secondary={acc.description}
                                 />
                             </ListItem>
                             <div className={classes.buttons}>
                                 <Button component="a" href='/profile/accounts/edit'
                                         className={classes.editButton}
                                         variant="outlined"
-                                        onClick={()=>this.profileContext.setAccountToEdit(p)}
+                                        onClick={()=>this.profileContext.setAccountToEdit(acc)}
                                 >
                                     Edit
                                 </Button>
-                                <Button variant="outlined" color="secondary">
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={()=>this.deleteAccount(acc.extAccountId)}
+                                >
                                     Delete
                                 </Button>
                             </div>
