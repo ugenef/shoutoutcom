@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+
+  back:
+    build:
+      context: ../../back/
+      dockerfile: Sol.HttpApi/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      MONGO_CONN_STR: "mongodb://root:example@mongo:27017"
+      JWT_KEY: "SOME_KEY_FOR_DEV_DONT_CARE"
+    networks:
+      - app_net
+    labels:
+      - "traefik.http.routers.back.rule=Host(`api.service.localhost`)"
+      - "traefik.http.routers.back.service=back"
+      - "traefik.http.services.back.loadbalancer.server.port=80"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+networks:
+  app_net:
+      name: app_net
+      external: true
+
+volumes:
+    db: {}

@@ -7,14 +7,14 @@ using Sol.Token.Impl.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
-var connectionString = config["Mongo:ConnectionString"];
+var connectionString = config["MONGO_CONN_STR"];
 var database = config["Mongo:Database"];
 
 builder.Services.AddSolToken(connectionString, database,o =>
 {
     o.ValidIssuer = config["Jwt:ValidIssuer"];
     o.ValidAudience = config["Jwt:ValidAudience"];
-    o.Key = config["Jwt:Key"];
+    o.Key = config["JWT_KEY"];
 });
 builder.Services.AddSolAccounts(connectionString, database);
 builder.Services.AddSolCors(builder.Environment.EnvironmentName);
@@ -32,7 +32,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sol.HttpApi v1"));
 }
 
-app.UseHttpsRedirection();
 app.UseCors(builder.Environment.EnvironmentName);
 app.UseAuthentication();
 app.UseAuthorization();

@@ -29,7 +29,7 @@ namespace Sol.HttpApi.ServiceCollectionExtensions
                     {
                         ValidIssuer = config["Jwt:ValidIssuer"],
                         ValidAudience = config["Jwt:ValidAudience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT_KEY"])),
                     };
                 });
             return services;

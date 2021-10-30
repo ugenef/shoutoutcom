@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+
+  front:
+    build:
+      context: ../../front/
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACK_BASE_URL: "http://api.service.localhost/api/v1"
+        REACT_APP_GOOGLE_CLIENT_ID: "${REACT_APP_GOOGLE_CLIENT_ID}"
+    networks:
+      - app_net
+    labels:
+      - "traefik.http.routers.front.rule=Host(`localhost`)"
+      - "traefik.http.routers.front.service=front"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+networks:
+  app_net:
+      name: app_net
+      external: true
+
+volumes:
+    db: {}

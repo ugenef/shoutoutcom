@@ -9,7 +9,8 @@ COPY . ./
 
 #This is the least complicated way to inject
 #env variables to a react app, yet it is not
-#the safest one. One day it has to be fixed.
+#the safest one. Great for MVP, but in a serious
+#app it should be improved
 ARG REACT_APP_BACK_BASE_URL
 ENV REACT_APP_BACK_BASE_URL $REACT_APP_BACK_BASE_URL
 ARG REACT_APP_GOOGLE_CLIENT_ID

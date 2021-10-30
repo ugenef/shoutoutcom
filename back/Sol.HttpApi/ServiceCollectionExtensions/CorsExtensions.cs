@@ -7,7 +7,12 @@ namespace Sol.HttpApi.ServiceCollectionExtensions
     {
         private static readonly Dictionary<string, string[]> AllowedHosts = new()
         {
-            { "Development", new[] { "http://localhost:3000" } }
+            { "Development", new[]
+            {
+                "http://localhost:3000",
+                "http://service.localhost",
+                "https://service.localhost",
+            } }
         };
 
         public static IServiceCollection AddSolCors(

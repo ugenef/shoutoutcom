@@ -63,13 +63,10 @@ namespace Sol.Accounts.Impl
         {
             try
             {
-                Console.WriteLine("outer");
                 await _queueSem.WaitAsync(0).ConfigureAwait(false);
                 try
                 {
-                    Console.WriteLine("inner");
                     await _workerSem.WaitAsync().ConfigureAwait(false);
-                    Console.WriteLine("worker");
                     var newOrdering = await FindSortedAccountsAsync().ConfigureAwait(false);
                     _cache.Set(CachingKey, newOrdering, _expiration);
                 }
@@ -83,7 +80,6 @@ namespace Sol.Accounts.Impl
             {
                 _logger.LogError(e, "Error when recalculating scores");
             }
-            Console.WriteLine("exit");
         }
 
         private async Task<Account[]> FindSortedAccountsAsync()
