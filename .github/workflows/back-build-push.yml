@@ -1,0 +1,22 @@
+name: back-build-push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the image
+      run: docker build --file Sol.HttpApi/Dockerfile --tag ghcr.io/ugenef/sol/back:lastest /back
+    - name: Login the registry
+      run: docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
+    - name: Push the image
+      run: docker push ghcr.io/ugenef/sol/back:lastest
+    - name: Logout from the registry
+      run: docker logout
