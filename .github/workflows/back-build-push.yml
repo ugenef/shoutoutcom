@@ -12,8 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: debug
+      run: ls -a
     - name: Build the image
-      run: docker build --file Sol.HttpApi/Dockerfile --tag ghcr.io/ugenef/sol/back:lastest /back
+      run: docker build --file Sol.HttpApi/Dockerfile --tag ghcr.io/ugenef/sol/back:lastest back
     - name: Login the registry
       run: docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
     - name: Push the image
