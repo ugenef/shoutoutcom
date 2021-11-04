@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Create image tag
-      run: echo "IMAGE_TAG=ghcr.io/ugenef/sol/back:${GITHUB_REF#refs/*/}" >> $GITHUB_ENV && echo $IMAGE_TAG
+      run: echo "IMAGE_TAG=ghcr.io/${{ secrets.GHCR_USERNAME }}/sol/back:${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     - name: Build the image
       run: docker build --file back/Sol.HttpApi/Dockerfile --tag ${{ env.IMAGE_TAG }} back
     - name: Login the registry
